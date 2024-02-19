@@ -55,6 +55,10 @@ def build_edge_sam(checkpoint=None, upsample_mode="bicubic"):
     )
     return _build_sam(image_encoder, checkpoint)
 
+def build_custom_sam(checkpoint=None, upsample_mode="bicubic"):
+    image_encoder = None
+    return _build_sam(image_encoder, checkpoint)
+
 
 sam_model_registry = {
     "default": build_edge_sam,
@@ -62,6 +66,7 @@ sam_model_registry = {
     "vit_l": build_sam_vit_l,
     "vit_b": build_sam_vit_b,
     "edge_sam": build_edge_sam,
+    'custom_sam': build_custom_sam
 }
 build_sam = build_edge_sam
 
