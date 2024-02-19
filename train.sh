@@ -1,0 +1,1 @@
+CUDA_VISIBLE_DEVICES=2,3 accelerate launch --main_process_port 29000 --num_processes 2 --mixed_precision 'fp16' train_distillation_sam.py

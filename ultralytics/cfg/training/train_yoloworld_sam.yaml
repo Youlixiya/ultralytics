@@ -1,0 +1,19 @@
+model:
+  student_model:
+    model: ckpts/yolov8l-sam-world.pt
+    sam_ckpt: ckpts/custom_sam.pt
+  teacher_model:
+    sam_model_type: vit_h
+    sam_checkpoint: checkpoints/sam/sam_vit_h_4b8939.pth
+train:
+  image_dir: data/sam/images
+  lr: 2e-4
+  optimizer: adam
+  num_warmup_steps: 2000
+  mixed_precision: 'fp16'
+  torch_dtype: float16
+  batch_size: 4
+  epochs: 5
+  min_lr: 1e-6
+  loss_fn: mse
+  save_path: ckpts/yolov8l-world-sam.pt
