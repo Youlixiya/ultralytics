@@ -62,9 +62,21 @@ def build_mobile_sam(checkpoint=None):
         checkpoint=checkpoint,
     )
 
+def build_sam_prompt_encoder_decoder(checkpoint=None):
+    """Build and return Mobile Segment Anything Model (Mobile-SAM)."""
+    return _build_sam(
+        encoder_embed_dim=[64, 128, 160, 320],
+        encoder_depth=[2, 2, 6, 2],
+        encoder_num_heads=[2, 4, 5, 10],
+        encoder_global_attn_indexes=None,
+        mobile_sam=False,
+        no_image_encoder=True,
+        checkpoint=checkpoint,
+    )
+
 
 def _build_sam(
-    encoder_embed_dim, encoder_depth, encoder_num_heads, encoder_global_attn_indexes, checkpoint=None, mobile_sam=False
+    encoder_embed_dim, encoder_depth, encoder_num_heads, encoder_global_attn_indexes, checkpoint=None, mobile_sam=False, no_image_encoder=False
 ):
     """Builds the selected SAM model architecture."""
     prompt_embed_dim = 256
@@ -89,21 +101,24 @@ def _build_sam(
             layer_lr_decay=0.8,
         )
         if mobile_sam
-        else ImageEncoderViT(
-            depth=encoder_depth,
-            embed_dim=encoder_embed_dim,
-            img_size=image_size,
-            mlp_ratio=4,
-            norm_layer=partial(torch.nn.LayerNorm, eps=1e-6),
-            num_heads=encoder_num_heads,
-            patch_size=vit_patch_size,
-            qkv_bias=True,
-            use_rel_pos=True,
-            global_attn_indexes=encoder_global_attn_indexes,
-            window_size=14,
-            out_chans=prompt_embed_dim,
-        )
+        else
+            ImageEncoderViT(
+                depth=encoder_depth,
+                embed_dim=encoder_embed_dim,
+                img_size=image_size,
+                mlp_ratio=4,
+                norm_layer=partial(torch.nn.LayerNorm, eps=1e-6),
+                num_heads=encoder_num_heads,
+                patch_size=vit_patch_size,
+                qkv_bias=True,
+                use_rel_pos=True,
+                global_attn_indexes=encoder_global_attn_indexes,
+                window_size=14,
+                out_chans=prompt_embed_dim,
+            )
     )
+    if no_image_encoder:
+        image_encoder = None
     sam = Sam(
         image_encoder=image_encoder,
         prompt_encoder=PromptEncoder(

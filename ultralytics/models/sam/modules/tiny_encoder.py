@@ -311,7 +311,7 @@ class Attention(torch.nn.Module):
         q = q.permute(0, 2, 1, 3)
         k = k.permute(0, 2, 1, 3)
         v = v.permute(0, 2, 1, 3)
-        self.ab = self.ab.to(self.attention_biases.device)
+        # self.ab = self.ab.to(self.attention_biases.device)
 
         attn = (q @ k.transpose(-2, -1)) * self.scale + (
             self.attention_biases[:, self.attention_bias_idxs] if self.training else self.ab

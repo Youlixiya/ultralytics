@@ -30,7 +30,8 @@ class StepRunner:
             # self.teacher_model = self.teacher_model
             targets = self.teacher_model(batch)
             # print(targets.shape)
-        preds = self.student_model.sam_backbone_forward(batch)
+        preds = self.student_model(batch)
+        # print(preds)
         b = preds.shape[0]
         loss = self.loss_fn(preds.reshape(b, -1), targets.reshape(b, -1))
             
@@ -49,6 +50,8 @@ class StepRunner:
         if self.stage=="train":
             if self.optimizer is not None:
                 step_metrics['lr'] = self.optimizer.state_dict()['param_groups'][0]['lr']
+                # if self.lr_scheduler is not None:
+                #     step_metrics['lr'] = self.lr_scheduler.get_lr()[0]
             else:
                 step_metrics['lr'] = 0.0
         return step_losses,step_metrics
@@ -505,8 +508,9 @@ class KerasModel(torch.nn.Module):
                 self.accelerator.print(colorful(
                         "<<<<<< {} without improvement in {} epoch,""early stopping >>>>>> \n"
                     ).format(monitor,patience))
-            self.net = self.accelerator.unwrap_model(self.net)
-            self.net.cpu()
+            self.student_model = self.accelerator.unwrap_model(self.student_model)
+            self.student_model.cpu()
+            # torch.save(self.student_model, f'model_{ckpt_path}')
             self.load_ckpt(ckpt_path)
             return dfhistory
         

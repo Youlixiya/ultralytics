@@ -1,0 +1,13 @@
+
+train:
+  image_root: data/sa/images
+  lr: 5e-2
+  momentum: 0.9
+  # weight_decay: 5e-2
+  optimizer: adam
+  mixed_precision: 'no'
+  batch_size: 8
+  epochs: 8
+  loss_fn: mse
+  eta_min: 1e-2
+  ckpt_path: ckpts/mobile_sam_image_encoder.pt

@@ -3,7 +3,7 @@
 __version__ = "8.1.15"
 
 from ultralytics.data.explorer.explorer import Explorer
-from ultralytics.models import RTDETR, SAM, YOLO, YOLOWorld
+from ultralytics.models import RTDETR, SAM, YOLO, YOLOWorld, YOLOSAWorld
 from ultralytics.models.fastsam import FastSAM
 from ultralytics.models.nas import NAS
 from ultralytics.utils import ASSETS, SETTINGS as settings
@@ -15,6 +15,7 @@ __all__ = (
     "ASSETS",
     "YOLO",
     "YOLOWorld",
+    "YOLOSAWorld",
     "NAS",
     "SAM",
     "FastSAM",
